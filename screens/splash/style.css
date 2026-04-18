@@ -46,6 +46,20 @@ html, body {
     animation: fadeIn .35s linear;
 }
 
+#addInfo {
+    left: 50%;
+    top:65%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    font-family: Archivo;
+    color: white;
+    font-weight: 800;
+    font-size: 2vw;
+    white-space: nowrap;
+    text-align: center;
+    animation: fadeIn .35s linear;
+}
+
 #paw {
     position: absolute;
     width: 10%;

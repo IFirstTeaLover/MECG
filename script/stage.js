@@ -3,6 +3,11 @@ const display = {
     canvas: element('canvas'),
     context: undefined,
 }
+
+const persistentCanvas = document.body.appendChild(document.createElement("canvas"))
+const persistentCtx = persistentCanvas.getContext("2d");
+persistentCanvas.style.display = "none";
+
 const camera = {
     x: 0,
     y: 0,
@@ -38,7 +43,7 @@ size.oldHeight = size.screenHeight
 size.defaultHeightNumber = camera.initialZoom / size.defaultHeight
 camera.oldZoom = camera.initialZoom
 
-addEventListener('resize', () => {
+document.addEventListener('resize', () => {
     resize()
 })
 
@@ -73,19 +78,19 @@ function drawObject(x, y, w, h, color) {
 }
 
 function drawObjectWF(x, y, w, h, color) {
-    display.context.lineWidth = 1*camera.z
+    display.context.lineWidth = 1 * camera.z
     display.context.strokeStyle = color
     preDrawObject(x, y, w, h)
     display.context.stroke()
 }
 
-function loadImage(source, name) {
+async function loadImage(source, name) {
     try {
         const texture = document.createElement('img')
         texture.src = source
         textures[name] = texture
     } catch (error) {
-        throw "networkError: failed to load image: "+ error
+        throw "networkError: failed to load image: " + error
     }
 
 }
@@ -93,7 +98,7 @@ function loadImage(source, name) {
 function drawText(x, y, text, color, size, camera, font) {
     size = size ?? 48
     font = font ?? "Archivo"
-    if(camera) {
+    if (camera) {
         x = screenToWorldX(x)
         y = screenToWorldY(y)
     }
@@ -104,17 +109,17 @@ function drawText(x, y, text, color, size, camera, font) {
 
 function drawImage(x, y, w, h, source, mirror, auto) {
     //inverse rendering code by jwklong
-    if(!textures[source] || !textures[source].complete) { throw("engineError: tried to draw unloaded image"); return}
+    if (!textures[source] || !textures[source].complete) { throw ("engineError: tried to draw unloaded image"); return }
 
-    const width = textures[source].width/100
-    const height = textures[source].height/100
+    const width = textures[source].width / 100
+    const height = textures[source].height / 100
     //auto = false
 
     x = screenToWorldX(x)
     y = screenToWorldY(y)
 
-    if(!auto) auto = false
-    if(auto) {
+    if (!auto) auto = false
+    if (auto) {
         w *= width * camera.z
         h *= height * camera.z
     } else {
@@ -124,14 +129,39 @@ function drawImage(x, y, w, h, source, mirror, auto) {
 
 
     if (mirror) {
-    display.context.save()
+        display.context.save()
         display.context.translate(w, 0)
         display.context.scale(-1, 1)
         x *= mirror ? -1 : 1
     }
     display.context.drawImage(textures[source], x, y, w, h)
-    if(mirror) {
+    if (mirror) {
         display.context.restore()
+    }
+}
+
+function drawPersistentImage(x, y, w, h, source, mirror, auto) {
+    if (!textures[source] || !textures[source].complete) { throw ("engineError: tried to draw unloaded image"); return }
+
+    const width = textures[source].width / 100;
+    const height = textures[source].height / 100;
+
+    if (!auto) auto = false;
+    if (auto) {
+        w *= width;
+        h *= height;
+    }
+    // no camera.z, no screenToWorldX — raw world coords
+
+    if (mirror) {
+        persistentCtx.save();
+        persistentCtx.translate(x + w, 0);
+        persistentCtx.scale(-1, 1);
+        x = 0;
+    }
+    persistentCtx.drawImage(textures[source], x, y, w, h);
+    if (mirror) {
+        persistentCtx.restore();
     }
 }
 
@@ -168,13 +198,16 @@ function trackPosition(x, y) {
 
 function resize() {
     //handle different screen sizes at least on paper lets see if it works gng
-    //i stole this code from my c++ game
-    
-    display.canvas.width = Math.floor(window.innerWidth)
-    display.canvas.height = Math.floor(window.innerHeight)
+    //axolay stole this code from his c++ game
+
+    display.canvas.width = window.innerWidth
+    display.canvas.height = window.innerHeight
 
     size.screenWidth = display.canvas.width
     size.screenHeight = display.canvas.height
+
+    persistentCanvas.width = display.canvas.width;
+    persistentCanvas.height = display.canvas.height;
 
     if (size.oldWidth != size.screenWidth || camera.oldZoom != camera.initialZoom) {
         size.defaultHeightNumber = camera.initialZoom / size.defaultHeight;
@@ -185,14 +218,14 @@ function resize() {
 }
 
 const playTrigger = element('play')
-playTrigger.addEventListener('click', ()=> {
+playTrigger.addEventListener('click', () => {
     playTrigger.remove()
     game.start()
 })
 
 function openMenu(name) {
     const menu = document.createElement('div')
-    
+
     document.body.appendChild()
 }
 

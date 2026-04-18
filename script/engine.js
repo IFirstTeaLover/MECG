@@ -141,6 +141,9 @@ game.tick = async() => {
         drawText(5, 80, lastError, "#ff0000", 30)
     }
 
+    try{drawText(5, 120, `Rendered Objects: ${objectsRendered} / ${level.length}`, "#ffd900", 30)}catch(e){}
+    try{drawText(5, 160, `Objects Culled: ${level.length - objectsRendered}`, "#ffd900", 30)}catch(e){}
+
     drawText(5, 40, framerate, "#000000")
     //drawText(5, 120, player.animation, "#000000")
     //drawText(5, 180, game.frame, "#000000")

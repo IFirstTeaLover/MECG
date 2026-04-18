@@ -1,1 +1,0 @@
-"C:\Program Files\Google\Chrome\Application\chrome.exe" "http://localhost:6767" && python -m http.server 6767

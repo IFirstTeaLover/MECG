@@ -1,5 +1,9 @@
+let objectsRendered = 0;
 function renderObjects() {
+    objectsRendered = 0;
     level.forEach(object => {
+        if (!isOnScreen(object)) return;
+        objectsRendered++;
         switch (object.type) {
             case 0:
                 drawObject(
@@ -77,12 +81,32 @@ function drawTriggers() {
     });
 }
 
+function isOnScreen(obj) {
+    const screenW = size.screenWidth;
+    const screenH = size.screenHeight;
+
+    const w = obj.w || 0;
+    const h = obj.h || 0;
+
+    const buffer = 50;
+
+    const screenLeft  = (obj.x + camera.x) * camera.z + screenW / 2;
+    const screenRight = (obj.x + w + camera.x) * camera.z + screenW / 2;
+    const screenTop   = (obj.y + camera.y) * camera.z + screenH / 2;
+    const screenBot   = (obj.y + h + camera.y) * camera.z + screenH / 2;
+
+    return screenRight > -buffer &&
+           screenLeft  < screenW + buffer &&
+           screenBot   > -buffer &&
+           screenTop   < screenH + buffer;
+}
+
 function renderPlayer() {
     drawImage(player.x+player.ox, player.y+player.oy, 100, 100, player.texture, player.mirror)
 }
 
 function renderWater() {
-    drawObject((0-camera.x) - display.canvas.width / 4, world.minHeight, display.canvas.width, display.canvas.height / 2, "#3c82d74d")
+    drawObject((0-camera.x) - display.canvas.width / 4, world.minHeight, display.canvas.width, display.canvas.height / 2, "#d7d43c4d")
 }
 
 //i made this real quick pls dont judge it wasnt meant to be used by anyone besides me ok?

@@ -4,21 +4,19 @@
 
 const stains = []
 
+let stainsDirty = true;
+
 function defineStain(x, y, w, h, source) {
-    stains.push({
-        x:x, y:y, w:w, h:h, source: source
-    })
+    drawPersistentImage(x, y, w, h, source, 0, 0);
 }
 
 function renderStains() {
-    createClippingMap()
-    stains.forEach(stain => {
-        const {x, y, w, h, source} = stain
-        drawImage(x, y, w, h, source, 0, 0)
-    });
-    display.context.restore()
+    const sx = (0 + camera.x) * camera.z + size.screenWidth / 2;
+    const sy = (0 + camera.y) * camera.z + size.screenHeight / 2;
+    const sw = persistentCanvas.width * camera.z;
+    const sh = persistentCanvas.height * camera.z;
+    display.context.drawImage(persistentCanvas, sx, sy, sw, sh);
 }
-
 let clippy = true
 
 function createClippingMap() {        

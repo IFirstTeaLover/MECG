@@ -39,6 +39,10 @@
         text.id = "name"
         element("starcontainer").appendChild(text)
 
+        const additionalInfo = document.createElement("h3")
+        additionalInfo.textContent = "(Forked by BulbaSprout)"
+        additionalInfo.id = "addInfo"
+        element("starcontainer").appendChild(additionalInfo)
     }
 
     async function addClickIndicator() {

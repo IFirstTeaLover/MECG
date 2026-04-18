@@ -27,10 +27,10 @@ loadTextures(
 )
 
 
-function loadTextures(textures, path) {
-    textures.forEach(asset => {
-        loadImage(`${path}/${asset}`, asset.split('.')[0])
-    })
+async function loadTextures(textures, path) {
+    for (const asset of textures) {
+        await loadImage(`${path}/${asset}`, asset.split('.')[0])
+    }
 }
 
 function loadJetCatTextures() {
