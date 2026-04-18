@@ -43,7 +43,7 @@ size.oldHeight = size.screenHeight
 size.defaultHeightNumber = camera.initialZoom / size.defaultHeight
 camera.oldZoom = camera.initialZoom
 
-document.addEventListener('resize', () => {
+window.addEventListener('resize', () => {
     resize()
 })
 
